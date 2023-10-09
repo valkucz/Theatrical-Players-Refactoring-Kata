@@ -11,12 +11,12 @@ def statement(invoice, plays):
 
     for perf in invoice['performances']:
         play = plays[perf['playID']]
-        _, this_amount = calculate_amount(perf, plays)
+        amount_per_performance = calculate_amount(perf, plays)
 
         volume_credits = calculate_volume_credits(perf, play, volume_credits)
         # print line for this order
-        result += f' {play["name"]}: {format_as_dollars(this_amount/100)} ({perf["audience"]} seats)\n'
-        total_amount += this_amount
+        result += f' {play["name"]}: {format_as_dollars(amount_per_performance/100)} ({perf["audience"]} seats)\n'
+        total_amount += amount_per_performance
 
     result += f'Amount owed is {format_as_dollars(total_amount/100)}\n'
     result += f'You earned {volume_credits} credits\n'
@@ -38,7 +38,7 @@ def calculate_amount(perf, plays):
 
     else:
         raise ValueError(f'unknown type: {play["type"]}')
-    return play, this_amount
+    return this_amount
 
 
 def calculate_volume_credits(perf, play, volume_credits):
