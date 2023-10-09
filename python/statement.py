@@ -11,19 +11,7 @@ def statement(invoice, plays):
 
     for perf in invoice['performances']:
         play = plays[perf['playID']]
-        if play['type'] == "tragedy":
-            this_amount = 40000
-            if perf['audience'] > 30:
-                this_amount += 1000 * (perf['audience'] - 30)
-        elif play['type'] == "comedy":
-            this_amount = 30000
-            if perf['audience'] > 20:
-                this_amount += 10000 + 500 * (perf['audience'] - 20)
-
-            this_amount += 300 * perf['audience']
-
-        else:
-            raise ValueError(f'unknown type: {play["type"]}')
+        _, this_amount = calculate_amount(perf, plays)
 
         volume_credits = calculate_volume_credits(perf, play, volume_credits)
         # print line for this order
@@ -33,6 +21,24 @@ def statement(invoice, plays):
     result += f'Amount owed is {format_as_dollars(total_amount/100)}\n'
     result += f'You earned {volume_credits} credits\n'
     return result
+
+
+def calculate_amount(perf, plays):
+    play = plays[perf['playID']]
+    if play['type'] == "tragedy":
+        this_amount = 40000
+        if perf['audience'] > 30:
+            this_amount += 1000 * (perf['audience'] - 30)
+    elif play['type'] == "comedy":
+        this_amount = 30000
+        if perf['audience'] > 20:
+            this_amount += 10000 + 500 * (perf['audience'] - 20)
+
+        this_amount += 300 * perf['audience']
+
+    else:
+        raise ValueError(f'unknown type: {play["type"]}')
+    return play, this_amount
 
 
 def calculate_volume_credits(perf, play, volume_credits):
