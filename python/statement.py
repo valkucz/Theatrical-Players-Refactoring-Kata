@@ -14,9 +14,13 @@ def statement(invoice, plays):
         amount_per_performance = calculate_amount(perf, plays)
 
         volume_credits = calculate_volume_credits(perf, play, volume_credits)
-        # print line for this order
+         # print line for this order
         result += f' {play["name"]}: {format_as_dollars(amount_per_performance/100)} ({perf["audience"]} seats)\n'
+
+    for perf in invoice['performances']:
+        amount_per_performance = calculate_amount(perf, plays)
         total_amount += amount_per_performance
+
 
     result += f'Amount owed is {format_as_dollars(total_amount/100)}\n'
     result += f'You earned {volume_credits} credits\n'
