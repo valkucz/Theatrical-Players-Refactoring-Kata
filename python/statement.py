@@ -38,4 +38,6 @@ def statement(invoice, plays):
     result += f'You earned {volume_credits} credits\n'
     return result
 
+def statement_html(invoice, plays):
+    return "abc"
 
