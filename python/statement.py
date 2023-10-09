@@ -11,7 +11,7 @@ def statement(invoice, plays):
 
     for perf in invoice['performances']:
         play = plays[perf['playID']]
-        if play['type'] == "tragedy":
+        if play['type'] == "tragedy":asdsa
             this_amount = 40000
             if perf['audience'] > 30:
                 this_amount += 1000 * (perf['audience'] - 30)
