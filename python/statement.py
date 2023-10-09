@@ -52,7 +52,6 @@ class PerfData():
 
 
 def statement(invoice, plays):
-    total_amount = 0
     result = f'Statement for {Calculator.get_customer_invoice(invoice)}\n'
 
     for perf in invoice['performances']:
