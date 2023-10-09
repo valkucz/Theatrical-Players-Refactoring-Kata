@@ -37,6 +37,13 @@ class Calculator:
             total_amount += amount_per_performance
         return total_amount
 
+    def get_volume_credits(invoice, plays):
+        volume_credits = 0
+        for perf in invoice['performances']:
+            play = get_play(perf, plays)
+            volume_credits += Calculator.calculate_volume_credits(perf, play)
+        return volume_credits
+
 def statement(invoice, plays):
     total_amount = 0
     volume_credits = 0
@@ -53,7 +60,7 @@ def statement(invoice, plays):
     total_amount = Calculator.get_total_amount(invoice, plays, total_amount)
 
     result += f'Amount owed is {format_as_dollars(total_amount)}\n'
-    result += f'You earned {volume_credits} credits\n'
+    result += f'You earned {Calculator.get_volume_credits(invoice, plays)} credits\n'
     return result
 
 
