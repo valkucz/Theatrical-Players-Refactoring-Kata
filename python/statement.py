@@ -1,6 +1,16 @@
 import math
 
 
+class Calculator:
+
+    @staticmethod
+    def calculate_volume_credits(perf, play):
+        volume_credits = max(perf['audience'] - 30, 0)
+        if "comedy" == play["type"]:
+            volume_credits += math.floor(perf['audience'] / 5)
+        return volume_credits
+
+
 def statement(invoice, plays):
     total_amount = 0
     volume_credits = 0
@@ -10,7 +20,7 @@ def statement(invoice, plays):
         play = get_play(perf, plays)
         amount_per_performance = calculate_amount(perf, plays)
 
-        volume_credits += calculate_volume_credits(perf, play)
+        volume_credits += Calculator.calculate_volume_credits(perf, play)
         # print line for this order
         result += f' {play["name"]}: {format_as_dollars(amount_per_performance)} ({perf["audience"]} seats)\n'
 
@@ -23,12 +33,11 @@ def statement(invoice, plays):
     return result
 
 
+def statement_html(invoice, plays):
+    return "abc"
+
 def get_play(perf, plays):
     return plays[perf['playID']]
-
-
-def format_as_dollars(amount):
-    return f"${(amount / 100):0,.2f}"
 
 
 def calculate_amount(perf, plays):
@@ -49,12 +58,5 @@ def calculate_amount(perf, plays):
     return this_amount
 
 
-def calculate_volume_credits(perf, play):
-    volume_credits = max(perf['audience'] - 30, 0)
-    if "comedy" == play["type"]:
-        volume_credits += math.floor(perf['audience'] / 5)
-    return volume_credits
-
-
-def statement_html(invoice, plays):
-    return "abc"
+def format_as_dollars(amount):
+    return f"${(amount / 100):0,.2f}"
