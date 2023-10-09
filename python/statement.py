@@ -10,6 +10,24 @@ class Calculator:
             volume_credits += math.floor(perf['audience'] / 5)
         return volume_credits
 
+    @staticmethod
+    def calculate_amount(perf, plays):
+        play = get_play(perf, plays)
+        if play['type'] == "tragedy":
+            this_amount = 40000
+            if perf['audience'] > 30:
+                this_amount += 1000 * (perf['audience'] - 30)
+        elif play['type'] == "comedy":
+            this_amount = 30000
+            if perf['audience'] > 20:
+                this_amount += 10000 + 500 * (perf['audience'] - 20)
+
+            this_amount += 300 * perf['audience']
+
+        else:
+            raise ValueError(f'unknown type: {play["type"]}')
+        return this_amount
+
 
 def statement(invoice, plays):
     total_amount = 0
@@ -18,14 +36,14 @@ def statement(invoice, plays):
 
     for perf in invoice['performances']:
         play = get_play(perf, plays)
-        amount_per_performance = calculate_amount(perf, plays)
+        amount_per_performance = Calculator.calculate_amount(perf, plays)
 
         volume_credits += Calculator.calculate_volume_credits(perf, play)
         # print line for this order
         result += f' {play["name"]}: {format_as_dollars(amount_per_performance)} ({perf["audience"]} seats)\n'
 
     for perf in invoice['performances']:
-        amount_per_performance = calculate_amount(perf, plays)
+        amount_per_performance = Calculator.calculate_amount(perf, plays)
         total_amount += amount_per_performance
 
     result += f'Amount owed is {format_as_dollars(total_amount)}\n'
@@ -40,22 +58,6 @@ def get_play(perf, plays):
     return plays[perf['playID']]
 
 
-def calculate_amount(perf, plays):
-    play = get_play(perf, plays)
-    if play['type'] == "tragedy":
-        this_amount = 40000
-        if perf['audience'] > 30:
-            this_amount += 1000 * (perf['audience'] - 30)
-    elif play['type'] == "comedy":
-        this_amount = 30000
-        if perf['audience'] > 20:
-            this_amount += 10000 + 500 * (perf['audience'] - 20)
-
-        this_amount += 300 * perf['audience']
-
-    else:
-        raise ValueError(f'unknown type: {play["type"]}')
-    return this_amount
 
 
 def format_as_dollars(amount):
