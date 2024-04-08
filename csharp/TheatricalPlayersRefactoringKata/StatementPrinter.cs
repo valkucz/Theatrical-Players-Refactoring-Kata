@@ -18,8 +18,10 @@ namespace TheatricalPlayersRefactoringKata
             foreach(var perf in invoice.Performances)
             {
                 var play = plays[perf.PlayID];
-                var price = ComputePrice(play, perf, cultureInfo, ref result);
+                var price = ComputePrice(play, perf);
                 totalAmount += price;
+                
+                // string
                 result += String.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", play.Name, Convert.ToDecimal(price / 100), perf.Audience);
 
                 // add volume credits
@@ -33,8 +35,7 @@ namespace TheatricalPlayersRefactoringKata
             return result;
         }
 
-        private static int ComputePrice(Play play, Performance perf, CultureInfo cultureInfo,
-            ref string result)
+        private static int ComputePrice(Play play, Performance perf)
         {
             // var volumeCredits = 0;
             var price = 0;
