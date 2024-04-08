@@ -17,12 +17,17 @@ namespace TheatricalPlayersRefactoringKata
 
             foreach(var perf in invoice.Performances)
             {
-                totalAmount += ComputePrice(plays[perf.PlayID], perf, cultureInfo, ref result);
+                var play = plays[perf.PlayID];
+                var price = ComputePrice(plays[perf.PlayID], perf, cultureInfo, ref result);
+                totalAmount += price;
+                result += String.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", play.Name, Convert.ToDecimal(price / 100), perf.Audience);
+
                 // add volume credits
                 volumeCredits += Math.Max(perf.Audience - 30, 0);
                 // add extra credit for every ten comedy attendees
-                volumeCredits += ComputeExtraCredit(plays[perf.PlayID], perf);
+                volumeCredits += ComputeExtraCredit(play, perf);
             }
+            
             result += String.Format(cultureInfo, "Amount owed is {0:C}\n", Convert.ToDecimal(totalAmount / 100));
             result += String.Format("You earned {0} credits\n", volumeCredits);
             return result;
@@ -51,10 +56,7 @@ namespace TheatricalPlayersRefactoringKata
             }
 
             // print line for this order
-            result += String.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", play.Name, Convert.ToDecimal(price / 100), perf.Audience);
-            // totalAmount += price;
             return price;
-            // return volumeCredits;
         }
 
         private static int ComputeExtraCredit(Play play, Performance perf)
