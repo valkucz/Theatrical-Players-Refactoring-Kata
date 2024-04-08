@@ -1,7 +1,11 @@
+_Support this and all my katas via [Patreon](https://www.patreon.com/EmilyBache)_
+
 Theatrical Players Refactoring Kata
 ====================================
 
 The first chapter of ['Refactoring' by Martin Fowler, 2nd Edition](https://www.thoughtworks.com/books/refactoring2) contains a worked example of this exercise, in javascript. That chapter is available to download for free. This repo contains the starting point for this exercise in several languages, with tests, so you can try it out for yourself.
+
+I made a video ["Refactoring with Martin Fowler | Theatrical Players Code Kata"](https://youtu.be/TjIrKEaOiVw) that explains a little bit about the exercise and why you should give it a try.
 
 What you need to change
 -----------------------
