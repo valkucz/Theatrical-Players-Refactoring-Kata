@@ -11,20 +11,12 @@ namespace TheatricalPlayersRefactoringKata
         private const int COMEDY_BASE_PRICE = 30000;
         public string Print(Invoice invoice, Dictionary<string, Play> plays)
         {
-            var totalAmount = 0;
             var result = string.Format("Statement for {0}\n", invoice.Customer);
             CultureInfo cultureInfo = new CultureInfo("en-US");
+            
 
-            foreach(var perf in invoice.Performances)
-            {
-                var play = plays[perf.PlayID];
-                var price = ComputePrice(play, perf);
-                totalAmount += price;
-                
-                // string
-                // result += String.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", play.Name, Convert.ToDecimal(price / 100), perf.Audience);
-
-            }
+            var totalAmount =
+                invoice.Performances.Aggregate(0, (agg, perf) => agg + ComputePrice(plays[perf.PlayID], perf));
 
 
             result = invoice.Performances.Aggregate(result,
