@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace TheatricalPlayersRefactoringKata
 {
@@ -11,7 +12,7 @@ namespace TheatricalPlayersRefactoringKata
         public string Print(Invoice invoice, Dictionary<string, Play> plays)
         {
             var totalAmount = 0;
-            var volumeCredits = 0;
+            // var volumeCredits = 0;
             var result = string.Format("Statement for {0}\n", invoice.Customer);
             CultureInfo cultureInfo = new CultureInfo("en-US");
 
@@ -24,11 +25,18 @@ namespace TheatricalPlayersRefactoringKata
                 // string
                 result += String.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", play.Name, Convert.ToDecimal(price / 100), perf.Audience);
 
-                // add volume credits
-                volumeCredits += Math.Max(perf.Audience - 30, 0);
-                // add extra credit for every ten comedy attendees
-                volumeCredits += ComputeExtraCredit(play, perf);
+                // // add volume credits
+                // volumeCredits += Math.Max(perf.Audience - 30, 0);
+                // // add extra credit for every ten comedy attendees
+                // volumeCredits += ComputeExtraCredit(play, perf);
             }
+
+            var volumeCredits = invoice.Performances.Aggregate(0, (agg, perf) =>
+                agg + ComputeExtraCredit(plays[perf.PlayID], perf) + Math.Max(perf.Audience - 30, 0));
+
+            // invoice.Performances.Aggregate(0, (perf) => 10);
+            
+            
             
             result += String.Format(cultureInfo, "Amount owed is {0:C}\n", Convert.ToDecimal(totalAmount / 100));
             result += String.Format("You earned {0} credits\n", volumeCredits);
