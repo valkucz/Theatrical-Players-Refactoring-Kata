@@ -6,6 +6,8 @@ namespace TheatricalPlayersRefactoringKata
 {
     public class StatementPrinter
     {
+        const int TRAGEDY_BASE_PRICE = 40000;
+        private const int COMEDY_BASE_PRICE = 30000;
         public string Print(Invoice invoice, Dictionary<string, Play> plays)
         {
             var totalAmount = 0;
@@ -31,15 +33,13 @@ namespace TheatricalPlayersRefactoringKata
             switch (play.Type) 
             {
                 case "tragedy":
-                    price = 40000;
                     if (perf.Audience > 30) {
-                        price += 1000 * (perf.Audience - 30);
+                        price += 1000 * (perf.Audience - 30) + TRAGEDY_BASE_PRICE;
                     }
                     break;
                 case "comedy":
-                    price = 30000;
                     if (perf.Audience > 20) {
-                        price += 10000 + 500 * (perf.Audience - 20);
+                        price += 10000 + 500 * (perf.Audience - 20) + COMEDY_BASE_PRICE;
                     }
                     price += 300 * perf.Audience;
                     break;
