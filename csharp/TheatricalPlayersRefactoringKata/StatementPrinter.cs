@@ -18,7 +18,7 @@ namespace TheatricalPlayersRefactoringKata
             foreach(var perf in invoice.Performances)
             {
                 var play = plays[perf.PlayID];
-                var price = ComputePrice(plays[perf.PlayID], perf, cultureInfo, ref result);
+                var price = ComputePrice(play, perf, cultureInfo, ref result);
                 totalAmount += price;
                 result += String.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", play.Name, Convert.ToDecimal(price / 100), perf.Audience);
 
