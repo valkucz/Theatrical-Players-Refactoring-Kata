@@ -12,7 +12,6 @@ namespace TheatricalPlayersRefactoringKata
         public string Print(Invoice invoice, Dictionary<string, Play> plays)
         {
             var totalAmount = 0;
-            // var volumeCredits = 0;
             var result = string.Format("Statement for {0}\n", invoice.Customer);
             CultureInfo cultureInfo = new CultureInfo("en-US");
 
@@ -23,19 +22,17 @@ namespace TheatricalPlayersRefactoringKata
                 totalAmount += price;
                 
                 // string
-                result += String.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", play.Name, Convert.ToDecimal(price / 100), perf.Audience);
+                // result += String.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", play.Name, Convert.ToDecimal(price / 100), perf.Audience);
 
-                // // add volume credits
-                // volumeCredits += Math.Max(perf.Audience - 30, 0);
-                // // add extra credit for every ten comedy attendees
-                // volumeCredits += ComputeExtraCredit(play, perf);
             }
+
+
+            result = invoice.Performances.Aggregate(result,
+                (agg, perf) => agg + String.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", plays[perf.PlayID].Name,
+                    Convert.ToDecimal(ComputePrice( plays[perf.PlayID], perf) / 100), perf.Audience));
 
             var volumeCredits = invoice.Performances.Aggregate(0, (agg, perf) =>
                 agg + ComputeExtraCredit(plays[perf.PlayID], perf) + Math.Max(perf.Audience - 30, 0));
-
-            // invoice.Performances.Aggregate(0, (perf) => 10);
-            
             
             
             result += String.Format(cultureInfo, "Amount owed is {0:C}\n", Convert.ToDecimal(totalAmount / 100));
