@@ -15,16 +15,17 @@ namespace TheatricalPlayersRefactoringKata
 
             foreach(var perf in invoice.Performances)
             {
-                volumeCredits = ComputePrice(plays, perf, volumeCredits, cultureInfo, ref result, ref totalAmount);
+                volumeCredits += ComputePrice(plays, perf, cultureInfo, ref result, ref totalAmount);
             }
             result += String.Format(cultureInfo, "Amount owed is {0:C}\n", Convert.ToDecimal(totalAmount / 100));
             result += String.Format("You earned {0} credits\n", volumeCredits);
             return result;
         }
 
-        private static int ComputePrice(Dictionary<string, Play> plays, Performance perf, int volumeCredits, CultureInfo cultureInfo,
+        private static int ComputePrice(Dictionary<string, Play> plays, Performance perf, CultureInfo cultureInfo,
             ref string result, ref int totalAmount)
         {
+            var volumeCredits = 0;
             var play = plays[perf.PlayID];
             var price = 0;
             switch (play.Type) 
@@ -46,7 +47,7 @@ namespace TheatricalPlayersRefactoringKata
                     throw new Exception("unknown type: " + play.Type);
             }
             // add volume credits
-            volumeCredits += Math.Max(perf.Audience - 30, 0);
+            volumeCredits = Math.Max(perf.Audience - 30, 0);
             // add extra credit for every ten comedy attendees
             if ("comedy" == play.Type) volumeCredits += (int)Math.Floor((decimal)perf.Audience / 5);
 
