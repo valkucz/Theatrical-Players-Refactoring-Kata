@@ -15,16 +15,14 @@ namespace TheatricalPlayersRefactoringKata
             CultureInfo cultureInfo = new CultureInfo("en-US");
             
 
-            var totalAmount =
-                invoice.Performances.Aggregate(0, (agg, perf) => agg + ComputePrice(plays[perf.PlayID], perf));
+            var totalAmount = ComputeTotalAmount(invoice, plays);
 
 
             result = invoice.Performances.Aggregate(result,
                 (agg, perf) => agg + String.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", plays[perf.PlayID].Name,
                     Convert.ToDecimal(ComputePrice( plays[perf.PlayID], perf) / 100), perf.Audience));
 
-            var volumeCredits = invoice.Performances.Aggregate(0, (agg, perf) =>
-                agg + ComputeExtraCredit(plays[perf.PlayID], perf) + Math.Max(perf.Audience - 30, 0));
+            var volumeCredits = ComputeVolumeCredits(invoice, plays);
             
             
             result += String.Format(cultureInfo, "Amount owed is {0:C}\n", Convert.ToDecimal(totalAmount / 100));
@@ -32,9 +30,21 @@ namespace TheatricalPlayersRefactoringKata
             return result;
         }
 
+        private static int ComputeVolumeCredits(Invoice invoice, Dictionary<string, Play> plays)
+        {
+            return invoice.Performances.Aggregate(0, (agg, perf) =>
+                agg + ComputeExtraCredit(plays[perf.PlayID], perf) + Math.Max(perf.Audience - 30, 0));
+        }
+
+        private static int ComputeTotalAmount(Invoice invoice, Dictionary<string, Play> plays)
+        {
+            var totalAmount =
+                invoice.Performances.Aggregate(0, (agg, perf) => agg + ComputePrice(plays[perf.PlayID], perf));
+            return totalAmount;
+        }
+
         private static int ComputePrice(Play play, Performance perf)
         {
-            // var volumeCredits = 0;
             var price = 0;
             switch (play.Type) 
             {
