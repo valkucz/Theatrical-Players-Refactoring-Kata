@@ -17,18 +17,17 @@ namespace TheatricalPlayersRefactoringKata
 
             foreach(var perf in invoice.Performances)
             {
-                volumeCredits += ComputePrice(plays, perf, cultureInfo, ref result, ref totalAmount);
+                volumeCredits += ComputePrice(plays[perf.PlayID], perf, cultureInfo, ref result, ref totalAmount);
             }
             result += String.Format(cultureInfo, "Amount owed is {0:C}\n", Convert.ToDecimal(totalAmount / 100));
             result += String.Format("You earned {0} credits\n", volumeCredits);
             return result;
         }
 
-        private static int ComputePrice(Dictionary<string, Play> plays, Performance perf, CultureInfo cultureInfo,
+        private static int ComputePrice(Play play, Performance perf, CultureInfo cultureInfo,
             ref string result, ref int totalAmount)
         {
             var volumeCredits = 0;
-            var play = plays[perf.PlayID];
             var price = 0;
             switch (play.Type) 
             {
@@ -49,12 +48,17 @@ namespace TheatricalPlayersRefactoringKata
             // add volume credits
             volumeCredits = Math.Max(perf.Audience - 30, 0);
             // add extra credit for every ten comedy attendees
-            if ("comedy" == play.Type) volumeCredits += (int)Math.Floor((decimal)perf.Audience / 5);
-
+            volumeCredits += ComputeExtraCredit(play, perf);
             // print line for this order
             result += String.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", play.Name, Convert.ToDecimal(price / 100), perf.Audience);
             totalAmount += price;
             return volumeCredits;
+        }
+
+        private static int ComputeExtraCredit(Play play, Performance perf)
+        {
+            if ("comedy" == play.Type)return  (int)Math.Floor((decimal)perf.Audience / 5);
+            return 0;
         }
     }
 }
